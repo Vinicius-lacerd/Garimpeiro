@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Garimpeiro : MonoBehaviour
 {
@@ -159,8 +160,34 @@ public class Garimpeiro : MonoBehaviour
                 SetFacesTablado();
                 break;
         }
+		VerificaGameOver();
     }
-
+	
+	void VerificaGameOver(){
+		if(tablado.Count == 0){
+			GameOver(true);
+			return;
+		}
+		if(monte.Count > 0){
+			return;
+		}
+		foreach(CartaGarimpeiro ct in tablado){
+			if(ValorAdjacente(ct, target)){
+				return;
+			}
+		}
+		GameOver(false);
+	}
+	
+	void GameOver(bool won){
+		if(won){
+			print("Game Over. Voce Venceu!");
+		}else{
+			print("Game Over. Derrotado!");
+		}
+		SceneManager.LoadScene("GarimpeiroGameplay");
+	}
+	
     public bool ValorAdjacente(CartaGarimpeiro c0, CartaGarimpeiro c1){
         if(!c0.faceUp || !c1.faceUp) return(false);
         if (Mathf.Abs(c0.valor - c1.valor) == 1){
